@@ -1,0 +1,50 @@
+---
+- name: Launch EC2 Instance with IAM ReadOnly Access
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    region: "ap-south-1"
+    ami_id: "ami-0d682f26195e9ec0f"  # Replace with your AMI ID
+    instance_type: "t2.micro"
+    key_name: "disdev"  # Replace with your key pair name
+    security_group: "default"  # Replace with your security group
+    iam_role_name: "EC2ReadOnlyRole"
+    policy_arn: "arn:aws:iam::aws:policy/IAMReadOnlyAccess"
+
+  tasks:
+    - name: Create IAM role
+      amazon.aws.iam_role:
+        name: "{{ iam_role_name }}"
+        assume_role_policy_document: >
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": { "Service": "ec2.amazonaws.com" },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          }
+        managed_policy:
+          - "{{ policy_arn }}"
+        state: present
+
+    - name: Launch EC2 instance with IAM role
+      amazon.aws.ec2_instance:
+        name: "EC2-With-ReadOnly-Access"
+        key_name: "{{ key_name }}"
+        instance_type: "{{ instance_type }}"
+        security_group: "{{ security_group }}"
+        region: "{{ region }}"
+        image_id: "{{ ami_id }}"
+        instance_role: "{{ iam_role_name }}"
+        wait: yes
+        count: 1
+        state: running
+      register: ec2_info
+
+    - name: Print EC2 instance details
+      debug:
+        var: ec2_info.instances
