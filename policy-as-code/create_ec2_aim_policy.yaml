@@ -7,7 +7,7 @@
     region: "ap-south-1"
     ami_id: "ami-0d682f26195e9ec0f"  # Replace with your AMI ID
     instance_type: "t2.micro"
-    key_name: "disdev"  # Replace with your key pair name
+    key_name: "key"  # Replace with your key pair name
     security_group: "default"  # Replace with your security group
     iam_role_name: "EC2ReadOnlyRole"
     policy_arn: "arn:aws:iam::aws:policy/IAMReadOnlyAccess"

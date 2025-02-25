@@ -5,7 +5,7 @@
   - name: start an instance with a public IP address
     amazon.aws.ec2_instance:
       name: "{{ item.name }}"
-      key_name: "awskey"
+      key_name: "key"
       # vpc_subnet_id: 
       instance_type: t2.micro
       security_group: default

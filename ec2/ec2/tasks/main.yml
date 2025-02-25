@@ -3,7 +3,7 @@
 - name: start an instance with a public IP address
   amazon.aws.ec2_instance:
     name: "ansible-instance"
-    # key_name: "awskey.pem"
+    # key_name: "key"
     # vpc_subnet_id: subnet-083ae9b35fb0d5748
     instance_type: "{{ type }}"
     security_group: default
